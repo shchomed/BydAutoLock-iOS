@@ -43,7 +43,7 @@ struct LockCarIntent: AppIntent {
         let (service, vin, pin) = try await makeServiceContext()
         let ok = try await service.lock(vin: vin, pin: pin)
         LogManager.shared.log("API", "Siri 잠금: \(ok ? "성공" : "전송됨")")
-        return .result(dialog: ok ? "차량을 잠갔습니다." : "잠금 명령을 전송했습니다.")
+        return .result(dialog: ok ? IntentDialog(stringLiteral: "차량을 잠갔습니다.") : IntentDialog(stringLiteral: "잠금 명령을 전송했습니다."))
     }
 }
 
@@ -57,7 +57,7 @@ struct UnlockCarIntent: AppIntent {
         let (service, vin, pin) = try await makeServiceContext()
         let ok = try await service.unlock(vin: vin, pin: pin)
         LogManager.shared.log("API", "Siri 잠금 해제: \(ok ? "성공" : "전송됨")")
-        return .result(dialog: ok ? "잠금을 해제했습니다." : "잠금 해제 명령을 전송했습니다.")
+        return .result(dialog: ok ? IntentDialog(stringLiteral: "잠금을 해제했습니다.") : IntentDialog(stringLiteral: "잠금 해제 명령을 전송했습니다."))
     }
 }
 
@@ -71,7 +71,7 @@ struct OpenTrunkIntent: AppIntent {
         let (service, vin, pin) = try await makeServiceContext()
         let ok = try await service.openTrunk(vin: vin, pin: pin)
         LogManager.shared.log("API", "Siri 트렁크 열기: \(ok ? "성공" : "전송됨")")
-        return .result(dialog: ok ? "트렁크를 열었습니다." : "트렁크 열기 명령을 전송했습니다.")
+        return .result(dialog: ok ? IntentDialog(stringLiteral: "트렁크를 열었습니다.") : IntentDialog(stringLiteral: "트렁크 열기 명령을 전송했습니다."))
     }
 }
 
@@ -85,7 +85,7 @@ struct CloseTrunkIntent: AppIntent {
         let (service, vin, pin) = try await makeServiceContext()
         let ok = try await service.closeTrunk(vin: vin, pin: pin)
         LogManager.shared.log("API", "Siri 트렁크 닫기: \(ok ? "성공" : "전송됨")")
-        return .result(dialog: ok ? "트렁크를 닫았습니다." : "트렁크 닫기 명령을 전송했습니다.")
+        return .result(dialog: ok ? IntentDialog(stringLiteral: "트렁크를 닫았습니다.") : IntentDialog(stringLiteral: "트렁크 닫기 명령을 전송했습니다."))
     }
 }
 
@@ -105,7 +105,7 @@ struct StartClimateIntent: AppIntent {
                                                    cycleMode: s.acCycleMode,
                                                    windLevel: wind, pin: pin)
         LogManager.shared.log("API", "Siri 에어컨 켜기: \(temp)°C → \(ok ? "성공" : "전송됨")")
-        return .result(dialog: ok ? "에어컨을 켰습니다." : "에어컨 켜기 명령을 전송했습니다.")
+        return .result(dialog: ok ? IntentDialog(stringLiteral: "에어컨을 켰습니다.") : IntentDialog(stringLiteral: "에어컨 켜기 명령을 전송했습니다."))
     }
 }
 
@@ -119,7 +119,7 @@ struct StopClimateIntent: AppIntent {
         let (service, vin, pin) = try await makeServiceContext()
         let ok = try await service.stopClimate(vin: vin, pin: pin)
         LogManager.shared.log("API", "Siri 에어컨 끄기: \(ok ? "성공" : "전송됨")")
-        return .result(dialog: ok ? "에어컨을 껐습니다." : "에어컨 끄기 명령을 전송했습니다.")
+        return .result(dialog: ok ? IntentDialog(stringLiteral: "에어컨을 껐습니다.") : IntentDialog(stringLiteral: "에어컨 끄기 명령을 전송했습니다."))
     }
 }
 
