@@ -1,0 +1,25 @@
+include:
+  - project.yml
+
+# Only this target is built by the Sideload scheme. Keep the full project intact.
+targets:
+  BydAutoLock:
+    dependencies:REPLACE: []
+    entitlements:REPLACE:
+      path: BydAutoLock/Sideload.entitlements
+      properties: {}
+    settings:
+      base:
+        DEVELOPMENT_TEAM: ""
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGN_ENTITLEMENTS: BydAutoLock/Sideload.entitlements
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) SIDELOAD"
+
+schemes:
+  Sideload:
+    build:
+      targets:
+        BydAutoLock: all
+    archive:
+      config: Release

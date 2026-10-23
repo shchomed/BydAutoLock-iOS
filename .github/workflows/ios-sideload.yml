@@ -1,0 +1,48 @@
+name: Build iPhone IPA (Sideloadly)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'BydAutoLock/**'
+      - 'project*.yml'
+      - '.github/workflows/ios-sideload.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate iPhone build project
+        run: xcodegen generate --spec project.sideload.yml
+      - name: Build unsigned iPhone app
+        run: |
+          set -euo pipefail
+          xcodebuild -project BydAutoLock.xcodeproj -scheme Sideload \
+            -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY='' DEVELOPMENT_TEAM='' build
+      - name: Package unsigned IPA
+        run: |
+          set -euo pipefail
+          mkdir -p build/ipa/Payload
+          cp -R build/DerivedData/Build/Products/Release-iphoneos/BYDAutoLock.app build/ipa/Payload/
+          test ! -d build/ipa/Payload/BYDAutoLock.app/Watch
+          test ! -d build/ipa/Payload/BYDAutoLock.app/PlugIns
+          cd build/ipa
+          /usr/bin/zip -qry ../BydAutoLock-Sideloadly.ipa Payload
+          /usr/bin/unzip -t ../BydAutoLock-Sideloadly.ipa
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BydAutoLock-Sideloadly
+          path: build/BydAutoLock-Sideloadly.ipa
+          if-no-files-found: error
+          retention-days: 14
